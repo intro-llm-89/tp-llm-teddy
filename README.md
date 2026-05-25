@@ -1,39 +1,52 @@
 # Local LLM Vision API Client
 
-## Project Description
+A Python script that sends an image to a local vision model (via LM Studio) and gets back structured data about what's in it — using function calling so the response is parseable JSON instead of raw text.
 
-This project demonstrates how to interact with a local LLM (Large Language Model) that supports vision capabilities. It sends an image and a text prompt to LM Studio via its API and retrieves the model's response.
+## What it does
 
-## LLM Model Used
+You give it an image and a prompt, and it asks the model to identify characters and which movies/shows they're from. Instead of getting a blob of text back, the model calls structured functions (`add_character`, `add_analysis_summary`) so you get clean, usable data.
 
-**llava-1.5-7b** - A multimodal model capable of understanding and analyzing images.
+If the model doesn't support function calling (llava-1.5-7b has limited support), it falls back to plain text automatically.
 
 ## Requirements
 
 - Python 3.8+
-- LM Studio installed and running on localhost:1234
-- llava-1.5-7b model loaded in LM Studio
+- [LM Studio](https://lmstudio.ai/) installed, with the `llava-1.5-7b` model loaded and the local server running on `localhost:1234`
+
+To start the server in LM Studio: open the app → go to the "Local Server" tab → click "Start Server".
 
 ## Installation
 
-1. Clone the repository
-2. Install dependencies: `pip install -r requirements.txt`
+```bash
+git clone <repo_url>
+cd tp-llm-teddy
+pip install -r requirements.txt
+```
 
 ## Usage
 
 ```bash
-python main.py --image <path_to_image> --prompt <prompt_text_or_file.txt> [--output output.txt]
+python main.py --image <path_to_image> --prompt <prompt_text_or_file.txt>
 ```
 
-**Example:**
-
+Save the text response to a file:
 ```bash
 python main.py --image test-image.png --prompt prompt.txt --output response.txt
 ```
 
+Save the structured result as JSON (only populated when function calling works):
+```bash
+python main.py --image test-image.png --prompt prompt.txt --json-output result.json
+```
+
+Both flags can be combined:
+```bash
+python main.py --image test-image.png --prompt prompt.txt --output response.txt --json-output result.json
+```
+
 ## Files
 
-- `main.py`
-- `prompt.txt`
-- `test-image.png`
-- `requirements.txt`
+- `main.py` — the main script
+- `prompt.txt` — default prompt asking the model to identify characters and their movies/shows
+- `test-image.png` — a sample image to test with
+- `requirements.txt` — dependencies (just `requests`)
